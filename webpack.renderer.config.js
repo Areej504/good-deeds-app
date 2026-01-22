@@ -1,13 +1,23 @@
-const rules = require('./webpack.rules');
-
-rules.push({
-  test: /\.css$/,
-  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-});
+const path = require("path");
 
 module.exports = {
-  // Put your normal webpack config below here
+  entry: "./src/renderer.js",
+  output: {
+    filename: "index.js",
+    path: path.resolve(__dirname, "dist"),
+  },
   module: {
-    rules,
+    rules: [
+      {
+        test: /\.js$/, // All .js files
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".js"], // Let you import without .js extension
   },
 };
