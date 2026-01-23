@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomInput from "./CustomInput";
 import ProgressVisual from "./ProgressVisual";
 
-function TodayTab() {
+function TodayTab({ SetDeedsByDate }) {
   const deeds = [
     "Smile intentionally today.",
     "Pray for someone you love.",
@@ -20,15 +20,32 @@ function TodayTab() {
   const [index, setIndex] = useState(Math.floor(Math.random() * deeds.length));
   const [newDeed, setNewDeed] = useState("");
 
+  // Helper to get today's date string
+  const getTodayStr = () => new Date().toISOString().split("T")[0];
+
+  const saveDeedForToday = (deed) => {
+    const today = getTodayStr();
+
+    setDeedsByDate((prev) => {
+      const existing = prev[today] || [];
+      return {
+        ...prev,
+        [today]: [...existing, deed],
+      };
+    });
+  };
+
   const completeRandomDeed = () => {
     setDone(true);
     setDoneDeed(deeds[index]);
+    saveDeedForToday(newDeed);
   };
 
   const completeCustomDeed = () => {
     if (newDeed.trim() !== "") {
       setDone(true);
       setDoneDeed(newDeed);
+      saveDeedForToday(newDeed);
       setNewDeed("");
     }
   };
